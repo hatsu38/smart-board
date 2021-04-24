@@ -1,9 +1,11 @@
 import React, { VFC } from "react";
 import ReactDOM from "react-dom";
+import './styles/index.scss';
+import Clock from "src/components/organisms/Clock";
 
 const Index: VFC = () => (
-  <div className="">
-    <p className="">Hello React!👋</p>
+  <div className="text-white">
+    <Clock />
   </div>
 );
 
