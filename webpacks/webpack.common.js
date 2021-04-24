@@ -1,12 +1,15 @@
 const path = require("path");
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const tailwindcss = require("tailwindcss");
+const autoprefixer = require("autoprefixer");
 
 module.exports = {
   entry: ["./src/index.tsx"],
   resolve: {
     extensions: [".js", ".ts", ".tsx", ".jsx"],
     alias: {
-      "@smartBoard/src": path.resolve(__dirname, 'src/'),
+      'src': path.resolve(__dirname, '../src'),
     },
   },
   watchOptions: {
@@ -16,7 +19,11 @@ module.exports = {
   plugins: [
     new HtmlWebpackPlugin({
       template: 'public/index.html'
-    })
+    }),
+    new MiniCssExtractPlugin({
+      filename: "styles/[name].[contenthash].css",
+      chunkFilename: "[id].[contenthash].css",
+    }),
   ],
   module: {
     rules: [
@@ -27,6 +34,23 @@ module.exports = {
           {
             loader: 'ts-loader'
           }
+        ],
+      },
+      {
+        test: /\.(css|scss|sass)$/,
+        use: [
+          MiniCssExtractPlugin.loader,
+          "css-loader",
+          "sass-loader",
+          {
+            loader: "postcss-loader",
+            options: {
+              postcssOptions: {
+                ident: "postcss",
+                plugins: [tailwindcss, autoprefixer],
+              },
+            },
+          },
         ],
       },
     ],
