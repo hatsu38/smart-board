@@ -6,6 +6,10 @@ const autoprefixer = require("autoprefixer");
 
 module.exports = {
   entry: ["./src/index.tsx"],
+  output: {
+    path: path.resolve("dist"),
+    filename: "[name]-[contenthash].js",
+  },
   resolve: {
     extensions: [".js", ".ts", ".tsx", ".jsx"],
     alias: {
