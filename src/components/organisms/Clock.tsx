@@ -20,8 +20,8 @@ function Clock() {
   return (
     <div className="font-light font-robot">
       <p className="text-2xl text-thinGray">{now.format('YYYY/MM/DD')}({now.format('dd')})</p>
-      <h2 className="text-9xl tracking-tight">
-        {now.format('HH:mm')}<span className="text-3xl align-top text-thinGray">{now.format('ss')}</span>
+      <h2 className="text-8xl tracking-tight">
+        {now.format('HH:mm')}<span className="text-4xl align-top text-thinGray">{now.format('ss')}</span>
       </h2>
     </div>
   );
