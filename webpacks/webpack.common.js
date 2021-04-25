@@ -1,6 +1,7 @@
 const path = require("path");
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const Dotenv = require('dotenv-webpack');
 const tailwindcss = require("tailwindcss");
 const autoprefixer = require("autoprefixer");
 
@@ -27,6 +28,9 @@ module.exports = {
     new MiniCssExtractPlugin({
       filename: "styles/[name].[contenthash].css",
       chunkFilename: "[id].[contenthash].css",
+    }),
+    new Dotenv({
+      path: ".env",
     }),
   ],
   module: {
