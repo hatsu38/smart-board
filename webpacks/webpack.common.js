@@ -29,9 +29,7 @@ module.exports = {
       filename: "styles/[name].[contenthash].css",
       chunkFilename: "[id].[contenthash].css",
     }),
-    new Dotenv({
-      path: ".env",
-    }),
+    new Dotenv(),
   ],
   module: {
     rules: [
