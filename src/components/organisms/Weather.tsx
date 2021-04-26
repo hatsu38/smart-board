@@ -30,7 +30,7 @@ function Weather() {
   }, []);
 
   const apiCall = async () => {
-    console.log("Hoge");
+    console.log("Hoge", process.env.OPEN_WEATHER_API_KEY);
     const response: any = await axios.get(WEATHER_API_BASE_URL,
       {
         params: {
