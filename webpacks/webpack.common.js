@@ -23,7 +23,7 @@ module.exports = {
   },
   plugins: [
     new webpack.DefinePlugin({
-      OPEN_WEATHER_API_KEY: JSON.stringify(process.env.OPEN_WEATHER_API_KEY),
+      'process.env.OPEN_WEATHER_API_KEY': JSON.stringify(process.env.OPEN_WEATHER_API_KEY),
     }),
     new HtmlWebpackPlugin({
       template: 'public/index.html'
