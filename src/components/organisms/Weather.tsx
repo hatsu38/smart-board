@@ -26,7 +26,7 @@ function Weather() {
   const WEATHER_API_BASE_URL = "https://api.openweathermap.org/data/2.5/onecall"
 
   useEffect(() => {
-    setInterval(() => apiCall(), 300000);
+    setInterval(() => apiCall(), 10000);
   }, []);
 
   const apiCall = async () => {
