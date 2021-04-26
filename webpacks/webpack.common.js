@@ -1,4 +1,5 @@
 const path = require("path");
+const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const tailwindcss = require("tailwindcss");
@@ -21,6 +22,9 @@ module.exports = {
     ignored: /node_modules/,
   },
   plugins: [
+    new webpack.DefinePlugin({
+      OPEN_WEATHER_API_KEY: JSON.stringify(process.env.OPEN_WEATHER_API_KEY),
+    }),
     new HtmlWebpackPlugin({
       template: 'public/index.html'
     }),
