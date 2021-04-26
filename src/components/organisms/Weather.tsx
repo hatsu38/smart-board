@@ -26,10 +26,11 @@ function Weather() {
   const WEATHER_API_BASE_URL = "https://api.openweathermap.org/data/2.5/onecall"
 
   useEffect(() => {
-    apiCall();
+    setInterval(() => apiCall(), 300000);
   }, []);
 
   const apiCall = async () => {
+    console.log("Hoge");
     const response: any = await axios.get(WEATHER_API_BASE_URL,
       {
         params: {
