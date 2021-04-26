@@ -57,7 +57,7 @@ function Weather() {
     const date = DayJs.unix(weather.dt);
     return ({
       date: `${date.format("DD")}(${date.format("dd")})`,
-      probabilityOfPrecipitation: weather.pop * 100,
+      probabilityOfPrecipitation: Math.round(weather.pop * 100),
       description: weather.weather[0].description,
       icon: weather.weather[0].icon,
       temperature: {
