@@ -20,9 +20,18 @@ interface dailyWeather {
   },
 }
 
+interface hourlyWeather {
+  date: Date,
+  probabilityOfPrecipitation: number,
+  description: string,
+  icon: string,
+  temperature: number,
+}
+
 function Weather() {
   const [currentWeather, setCurrentWeather] = useState<currentWeather>();
   const [dailyWeather, setDailyWeather] = useState<dailyWeather[]>([]);
+  const [hourlyWeather, setHourlyWeather] = useState<hourlyWeather[]>([]);
   const WEATHER_API_BASE_URL = "https://api.openweathermap.org/data/2.5/onecall"
 
   useEffect(() => {
@@ -51,6 +60,11 @@ function Weather() {
       formatDailyWeather(weather)
     ))
     setDailyWeather(formattedDailyWeather);
+
+    const formattedHourlyWeather = data.hourly.map((weather: any) => (
+      formatHourlyWeather(weather)
+    ))
+    setHourlyWeather(formattedHourlyWeather);
   }
 
   const formatDailyWeather = (weather: any) => {
@@ -64,7 +78,18 @@ function Weather() {
         max: Math.round(weather.temp.max),
         min: Math.round(weather.temp.min),
       },
-    })
+    });
+  }
+
+  const formatHourlyWeather = (weather: any) => {
+    const date = DayJs.unix(weather.dt);
+    return ({
+      date: `${date.format("h")}時`,
+      probabilityOfPrecipitation: Math.round(weather.pop * 100),
+      description: weather.weather[0].description,
+      icon: weather.weather[0].icon,
+      temperature: Math.round(weather.temp),
+    });
   }
 
   const weatherIconUrl = (icon: string) => {
@@ -72,7 +97,7 @@ function Weather() {
   }
 
   return (
-    <div className="font-light font-robot text-center">
+    <div className="font-light font-robot text-center max-w-sm">
       {currentWeather &&
         <>
           <p className="text-thinGray">{currentWeather.description}</p>
@@ -97,6 +122,19 @@ function Weather() {
             <div>{weather.probabilityOfPrecipitation}<span className="text-sm text-thinGray">%</span></div>
           </div>
         ))}
+        </div>
+      }
+
+      {hourlyWeather.length > 0 &&
+        <div className="border-t-2 border-b-2 border-thinGray mt-6 py-2 text-2xl whitespace-nowrap overflow-x-auto">
+          {hourlyWeather.map((weather, index) => (
+            <div key={index} className="inline-block w-2/12">
+              <p>{weather.date}</p>
+              <img src={weatherIconUrl(weather.icon)} className="mx-auto" />
+              <p>{weather.temperature}<span className="text-sm text-thinGray">℃</span></p>
+              <p>{weather.probabilityOfPrecipitation}<span className="text-sm text-thinGray">%</span></p>
+            </div>
+          ))}
         </div>
       }
     </div>
