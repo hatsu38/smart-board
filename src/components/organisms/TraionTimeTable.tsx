@@ -118,6 +118,12 @@ function TrainTimeTable() {
     return `http://openweathermap.org/img/wn/${icon}.png`
   }
 
+  console.log("station", station);
+  console.log("line", line);
+  console.log("lineDestination", lineDestination);
+  console.log("lineKind", lineKind);
+  console.log("timeTable", timeTable);
+
   return (
     <div className="font-light font-robot text-center max-w-sm">
       <h1>運行情報</h1>
