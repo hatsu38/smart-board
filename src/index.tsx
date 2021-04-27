@@ -3,6 +3,7 @@ import ReactDOM from "react-dom";
 import './styles/index.scss';
 import Clock from "src/components/organisms/Clock";
 import Weather from "src/components/organisms/Weather";
+import TrainTimeTable from "./components/organisms/TraionTimeTable";
 
 const Index: VFC = () => (
   <div className="text-white">
@@ -10,6 +11,7 @@ const Index: VFC = () => (
       <Clock />
       <Weather />
     </div>
+    <TrainTimeTable />
   </div>
 );
 
