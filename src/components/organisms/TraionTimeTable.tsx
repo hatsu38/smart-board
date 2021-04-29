@@ -3,10 +3,6 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import DayJs from "../../libs/dayjs-ja";
 
-interface Station {
-  name: string,
-}
-
 interface TimeTable {
   time: any,
   kindCode: number,
@@ -33,7 +29,7 @@ interface LineKind {
 
 
 function TrainTimeTable() {
-  const [station, setStation] = useState<Station>();
+  const [stationName, setStationName] = useState<string>();
   const [line, setLine] = useState<Line>();
   const [lineDestinations, setLineDestination] = useState<LineDestination[]>([]);
   const [lineKinds, setLineKind] = useState<LineKind[]>([]);
@@ -56,7 +52,9 @@ function TrainTimeTable() {
         }
       })
     const data = response.data.ResultSet.TimeTable;
-    setStation(data.stationName);
+    console.log("data", data);
+    setStationName(data.Station.Name);
+
     const formattedLine = formatLine(data.Line);
     setLine(formattedLine);
 
@@ -111,19 +109,31 @@ function TrainTimeTable() {
     });
   }
 
+  const filteredRecentTimeTable = timeTables.slice(0, 5);
+
+  const findLineKindNameByCode = (code: number) => {
+    const lineKind: LineKind | undefined = lineKinds.find(lineKind => lineKind.code === code);
+
+    return lineKind ? lineKind.name : null;
+  }
+
   console.log("today.format(YYYYMMDD)", today.format("YYYYMMDD"));
-  console.log("station", station);
+  console.log("stationName", stationName);
   console.log("line", line);
   console.log("lineDestination", lineDestinations);
   console.log("lineKind", lineKinds);
   console.log("timeTable", timeTables);
+  console.log("filteredRecentTimeTable", filteredRecentTimeTable);
 
   return (
-    <div className="font-light font-robot text-center max-w-sm">
-      <h1>{station && station.name}運行情報</h1>
+    <div className="font-light font-robot max-w-sm mt-4">
+      <h1 className="text-2xl">{stationName}駅の運行情報</h1>
       <div>
-        {timeTables.length > 0 && timeTables.slice(5).map(timeTable => (
-          <p key={timeTable.time}>{timeTable.time.format("HH:mm")}</p>
+        {filteredRecentTimeTable.length > 0 && filteredRecentTimeTable.map(timeTable => (
+          <div key={timeTable.time}>
+            <time>{timeTable.time.format("HH:mm")}</time>：
+            <span>{findLineKindNameByCode(timeTable.kindCode)}</span>
+          </div>
         ))}
       </div>
     </div>
