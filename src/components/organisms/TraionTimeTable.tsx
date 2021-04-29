@@ -8,7 +8,7 @@ interface Station {
 }
 
 interface TimeTable {
-  time: Date,
+  time: any,
   kindCode: number,
   platformNumber: number,
   lineCode: number,
@@ -35,9 +35,9 @@ interface LineKind {
 function TrainTimeTable() {
   const [station, setStation] = useState<Station>();
   const [line, setLine] = useState<Line>();
-  const [lineDestination, setLineDestination] = useState<LineDestination[]>([]);
-  const [lineKind, setLineKind] = useState<LineKind[]>([]);
-  const [timeTable, setTimeTable] = useState<TimeTable[]>([]);
+  const [lineDestinations, setLineDestination] = useState<LineDestination[]>([]);
+  const [lineKinds, setLineKind] = useState<LineKind[]>([]);
+  const [timeTables, setTimeTable] = useState<TimeTable[]>([]);
   const EKISPART_API_BASE_URL = "https://api.ekispert.jp/v1/json/operationLine/timetable"
   const today = DayJs();
 
@@ -55,31 +55,28 @@ function TrainTimeTable() {
           date: today.format("YYYYMMDD"),
         }
       })
-    const data = response.ResultSet.TimeTable;
+    const data = response.data.ResultSet.TimeTable;
     setStation(data.stationName);
-
     const formattedLine = formatLine(data.Line);
     setLine(formattedLine);
 
-    const formattedLineDestination = data.LineDestination.map((LineDestination: any) => (
+    const formattedLineDestinations = data.LineDestination.map((LineDestination: any) => (
       formatLineDestination(LineDestination)
     ))
-    setLineDestination(formattedLineDestination);
+    setLineDestination(formattedLineDestinations);
 
 
-    const formattedLineKind = data.LineKind.map((LineKind: any) => (
+    const formattedLineKinds = data.LineKind.map((LineKind: any) => (
       formatLineKind(LineKind)
     ))
-    setLineKind(formattedLineKind);
+    setLineKind(formattedLineKinds);
 
-    const formattedTimeTable = data.HourTable.map((HourTable: any) => (
+    const formattedTimeTables = data.HourTable.flatMap((HourTable: any) => (
       HourTable.MinuteTable.map((MinuteTable: any) => (
-        // if(DayJs(`${today.format("YYYY-MM-DD")} ${HourTable.hour}:${MinuteTable.Minute}`) >= today) {
-        formatTimeTable(HourTable.Hour, MinuteTable.Minute)
-        // }
+        formatTimeTable(HourTable.Hour, MinuteTable)
       ))
     ));
-    setTimeTable(formattedTimeTable);
+    setTimeTable(formattedTimeTables);
   }
 
   const formatLine = (line: any) => {
@@ -106,7 +103,7 @@ function TrainTimeTable() {
 
   const formatTimeTable = (hour: number, minute: any) => {
     return ({
-      time: DayJs(`${today} ${hour}:${minute.Minute}`),
+      time: DayJs(`${today.format("YYYYMMDD")} ${hour}:${minute.Minute}`),
       kindCode: Number(minute.Stop.kindCode),
       platformNumber: Number(minute.Stop.platformNo),
       lineCode: Number(minute.Stop.lineCode),
@@ -114,19 +111,21 @@ function TrainTimeTable() {
     });
   }
 
-  const weatherIconUrl = (icon: string) => {
-    return `http://openweathermap.org/img/wn/${icon}.png`
-  }
-
+  console.log("today.format(YYYYMMDD)", today.format("YYYYMMDD"));
   console.log("station", station);
   console.log("line", line);
-  console.log("lineDestination", lineDestination);
-  console.log("lineKind", lineKind);
-  console.log("timeTable", timeTable);
+  console.log("lineDestination", lineDestinations);
+  console.log("lineKind", lineKinds);
+  console.log("timeTable", timeTables);
 
   return (
     <div className="font-light font-robot text-center max-w-sm">
-      <h1>運行情報</h1>
+      <h1>{station && station.name}運行情報</h1>
+      <div>
+        {timeTables.length > 0 && timeTables.slice(5).map(timeTable => (
+          <p key={timeTable.time}>{timeTable.time.format("HH:mm")}</p>
+        ))}
+      </div>
     </div>
   );
 };
