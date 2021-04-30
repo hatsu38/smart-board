@@ -70,7 +70,7 @@ function TrainTimeTable() {
     setLineKind(formattedLineKinds);
 
     const formattedTimeTables = data.HourTable.flatMap((HourTable: any) => (
-      HourTable.MinuteTable.map((MinuteTable: any) => (
+      HourTable.MinuteTable.flatMap((MinuteTable: any) => (
         formatTimeTable(HourTable.Hour, MinuteTable)
       ))
     ));
@@ -88,7 +88,7 @@ function TrainTimeTable() {
   const formatLineDestination = (LineDestination: any) => {
     return ({
       name: LineDestination.text,
-      code: Number(LineDestination.cod),
+      code: Number(LineDestination.code),
     });
   }
 
@@ -109,12 +109,21 @@ function TrainTimeTable() {
     });
   }
 
-  const filteredRecentTimeTable = timeTables.slice(0, 5);
+  const recentTimeTable = timeTables.filter(timeTable => {
+    return timeTable.time.isSameOrAfter(today);
+  });
+  const filteredRecentTimeTable = recentTimeTable.slice(0, 5);
 
   const findLineKindNameByCode = (code: number) => {
     const lineKind: LineKind | undefined = lineKinds.find(lineKind => lineKind.code === code);
 
-    return lineKind ? lineKind.name : null;
+    return lineKind ? lineKind.name.slice(0, 1) : null;
+  }
+
+  const findLineDestinationNameByCode = (code: number) => {
+    const lineDestination: LineDestination | undefined = lineDestinations.find(lineDestination => lineDestination.code === code);
+    console.log("lineDestination", lineDestination);
+    return lineDestination ? lineDestination.name : null;
   }
 
   console.log("today.format(YYYYMMDD)", today.format("YYYYMMDD"));
@@ -126,13 +135,14 @@ function TrainTimeTable() {
   console.log("filteredRecentTimeTable", filteredRecentTimeTable);
 
   return (
-    <div className="font-light font-robot max-w-sm mt-4">
+    <div className="font-light font-robot max-w-sm mt-11">
       <h1 className="text-2xl">{stationName}駅の運行情報</h1>
-      <div>
+      <div className="mt-6 space-y-2 text-2xl">
         {filteredRecentTimeTable.length > 0 && filteredRecentTimeTable.map(timeTable => (
-          <div key={timeTable.time}>
-            <time>{timeTable.time.format("HH:mm")}</time>：
-            <span>{findLineKindNameByCode(timeTable.kindCode)}</span>
+          <div key={timeTable.time} className="pb-1 border-b-2 border-thinGray flex items-center space-x-4">
+            <div><time>{timeTable.time.format("HH:mm")}</time></div>
+            <div><span>{findLineKindNameByCode(timeTable.kindCode)}</span></div>
+            <div><span>{findLineDestinationNameByCode(timeTable.destinationCode)}行</span></div>
           </div>
         ))}
       </div>
