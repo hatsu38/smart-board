@@ -111,6 +111,20 @@ function Weather() {
           <div>最低: {dailyWeather[0].temperature.min}<span className="text-sm text-thinGray">℃</span></div>
         </div>
       }
+
+      {hourlyWeather.length > 0 &&
+        <div className="border-b-2 border-thinGray mt-4 py-2 text-2xl whitespace-nowrap overflow-x-auto">
+          {hourlyWeather.map((weather, index) => (
+            <div key={index} className="inline-block w-2/12">
+              <p>{weather.date}</p>
+              <img src={weatherIconUrl(weather.icon)} className="mx-auto" />
+              <p>{weather.temperature}<span className="text-sm text-thinGray">℃</span></p>
+              <p>{weather.probabilityOfPrecipitation}<span className="text-sm text-thinGray">%</span></p>
+            </div>
+          ))}
+        </div>
+      }
+
       {dailyWeather.length > 0 &&
         <div className="mt-4 space-y-2">
         {dailyWeather.map((weather, index) => (
@@ -122,19 +136,6 @@ function Weather() {
             <div>{weather.probabilityOfPrecipitation}<span className="text-sm text-thinGray">%</span></div>
           </div>
         ))}
-        </div>
-      }
-
-      {hourlyWeather.length > 0 &&
-        <div className="border-t-2 border-b-2 border-thinGray mt-6 py-2 text-2xl whitespace-nowrap overflow-x-auto">
-          {hourlyWeather.map((weather, index) => (
-            <div key={index} className="inline-block w-2/12">
-              <p>{weather.date}</p>
-              <img src={weatherIconUrl(weather.icon)} className="mx-auto" />
-              <p>{weather.temperature}<span className="text-sm text-thinGray">℃</span></p>
-              <p>{weather.probabilityOfPrecipitation}<span className="text-sm text-thinGray">%</span></p>
-            </div>
-          ))}
         </div>
       }
     </div>
