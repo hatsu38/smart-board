@@ -6,7 +6,7 @@ import './styles/index.scss';
 
 import Clock from "src/components/organisms/Clock";
 import Weather from "src/components/organisms/Weather";
-import TrainTimeTable from "./components/organisms/TraionTimeTable";
+import TrainTimeTable from "./components/organisms/TrainTimeTable";
 
 const Index: VFC = () => (
   <Provider store={store}>
