@@ -137,11 +137,11 @@ function TrainTimeTable() {
   return (
     <div className="font-light font-robot max-w-sm mt-11">
       <h1 className="text-2xl">{stationName}駅の運行情報</h1>
-      <div className="mt-6 space-y-2 text-2xl">
+      <div className="mt-6 text-2xl space-y-3">
         {filteredRecentTimeTable.length > 0 && filteredRecentTimeTable.map(timeTable => (
-          <div key={timeTable.time} className="pb-1 border-b-2 border-thinGray flex items-center space-x-4">
+          <div key={timeTable.time} className="border-b-2 border-thinGray flex items-center space-x-4 pb-2">
             <div><time>{timeTable.time.format("HH:mm")}</time></div>
-            <div><span>{findLineKindNameByCode(timeTable.kindCode)}</span></div>
+            <div><span className="rounded-full border border-thinGray p-2 text-lg">{findLineKindNameByCode(timeTable.kindCode)}</span></div>
             <div><span>{findLineDestinationNameByCode(timeTable.destinationCode)}行</span></div>
           </div>
         ))}
