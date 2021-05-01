@@ -1,21 +1,20 @@
-import React from "react";
-import { useState, useEffect } from 'react';
+import React, { useEffect } from "react";
+import { useSelector, useDispatch } from 'react-redux'
 import DayJs from "../../libs/dayjs-ja";
+import { tick } from '../../slicers/TimerSlice'
 
 function Clock() {
-  const [now, setNow] = useState(DayJs());
+  const { time } = useSelector((state: any) =>state.timer);
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    const timerID = setInterval(() => tick(), 1000);
+    const timerID = setInterval(() => dispatch(tick(DayJs().format('YYYY/MM/DD HH:mm:ss'))), 1000);
 
     return function cleanup() {
       clearInterval(timerID);
     };
   });
-
-  const tick = () => {
-    setNow(DayJs());
-  }
+  const now = DayJs(time);
 
   return (
     <div className="font-light font-robot">
