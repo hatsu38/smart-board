@@ -10,7 +10,7 @@ interface currentWeather {
 }
 
 interface dailyWeather {
-  date: Date,
+  date: any,
   probabilityOfPrecipitation: number,
   description: string,
   icon: string,
@@ -32,6 +32,7 @@ function Weather() {
   const [currentWeather, setCurrentWeather] = useState<currentWeather>();
   const [dailyWeather, setDailyWeather] = useState<dailyWeather[]>([]);
   const [hourlyWeather, setHourlyWeather] = useState<hourlyWeather[]>([]);
+  const today = DayJs();
   const WEATHER_API_BASE_URL = "https://api.openweathermap.org/data/2.5/onecall"
 
   useEffect(() => {
@@ -59,7 +60,10 @@ function Weather() {
     const formattedDailyWeather = data.daily.map((weather: any) => (
       formatDailyWeather(weather)
     ))
-    setDailyWeather(formattedDailyWeather);
+    const filteredDailyWeathers = formattedDailyWeather.filter((dailyWeather: dailyWeather ) => {
+      return dailyWeather.date.isSameOrAfter(today);
+    });
+    setDailyWeather(filteredDailyWeathers);
 
     const formattedHourlyWeather = data.hourly.map((weather: any) => (
       formatHourlyWeather(weather)
@@ -70,7 +74,7 @@ function Weather() {
   const formatDailyWeather = (weather: any) => {
     const date = DayJs.unix(weather.dt);
     return ({
-      date: `${date.format("DD")}(${date.format("dd")})`,
+      date: date,
       probabilityOfPrecipitation: Math.round(weather.pop * 100),
       description: weather.weather[0].description,
       icon: weather.weather[0].icon,
@@ -84,7 +88,7 @@ function Weather() {
   const formatHourlyWeather = (weather: any) => {
     const date = DayJs.unix(weather.dt);
     return ({
-      date: `${date.format("h")}時`,
+      date: `${date.format("H")}時`,
       probabilityOfPrecipitation: Math.round(weather.pop * 100),
       description: weather.weather[0].description,
       icon: weather.weather[0].icon,
@@ -113,7 +117,7 @@ function Weather() {
       }
 
       {hourlyWeather.length > 0 &&
-        <div className="border-b-2 border-thinGray mt-4 py-2 text-2xl whitespace-nowrap overflow-x-auto">
+        <div className="mt-4 text-2xl whitespace-nowrap overflow-x-auto">
           {hourlyWeather.map((weather, index) => (
             <div key={index} className="inline-block w-2/12">
               <p>{weather.date}</p>
@@ -129,7 +133,7 @@ function Weather() {
         <div className="mt-4 space-y-2">
         {dailyWeather.map((weather, index) => (
           <div className="text-2xl flex justify-between items-center space-x-2 border-b-2 border-thinGray" key={index}>
-            <div>{weather.date}</div>
+            <div>{weather.date.format("DD")}({weather.date.format("dd")})</div>
             <img src={weatherIconUrl(weather.icon)} className="mx-auto" />
             <div>{weather.temperature.max}<span className="text-sm text-thinGray">℃</span></div>
             <div>{weather.temperature.min}<span className="text-sm text-thinGray">℃</span></div>
