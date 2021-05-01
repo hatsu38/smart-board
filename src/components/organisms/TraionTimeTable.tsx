@@ -136,7 +136,7 @@ function TrainTimeTable() {
 
   return (
     <div className="font-light font-robot max-w-sm mt-11">
-      <h1 className="text-2xl">{stationName}駅の運行情報</h1>
+      <h1 className="text-xl"><span className="text-xl">{line && line.name} {stationName}</span>駅の運行情報</h1>
       <div className="mt-6 text-2xl space-y-3">
         {filteredRecentTimeTable.length > 0 && filteredRecentTimeTable.map(timeTable => (
           <div key={timeTable.time} className="border-b-2 border-thinGray flex items-center space-x-4 pb-2">
