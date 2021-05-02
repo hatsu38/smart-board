@@ -25,6 +25,8 @@ interface LineDestination {
 interface LineKind {
   code: number,
   name: string,
+  mark: string,
+  display: boolean,
 }
 
 
@@ -34,19 +36,15 @@ function TrainTimeTable() {
   const [lineDestinations, setLineDestination] = useState<LineDestination[]>([]);
   const [lineKinds, setLineKind] = useState<LineKind[]>([]);
   const [timeTables, setTimeTable] = useState<TimeTable[]>([]);
+  const [filteredTimeTables, setFilteredTimeTables] = useState<TimeTable[]>([]);
   const EKISPART_API_BASE_URL = "https://api.ekispert.jp/v1/json/operationLine/timetable"
   const { time } = useSelector((state: any) => state.timer);
   const now = DayJs(time);
-  let recentTimeTables = [];
 
   useEffect(() => { apiCall() }, []);
   useEffect(() => {
     if (shouldRefetch()) {
-      const recentTimeTable = timeTables.filter(timeTable => {
-        return timeTable.time.isSameOrAfter(now);
-      });
-      console.log("recentTimeTable", recentTimeTable);
-      recentTimeTables = recentTimeTable.slice(0, 5);
+      resetFilteredRecentTimeTable();
     }
   }, [now]);
 
@@ -122,6 +120,8 @@ function TrainTimeTable() {
     return ({
       name: LineKind.text,
       code: Number(LineKind.code),
+      mark: LineKind.text.slice(0, 1),
+      display: true,
     });
   }
 
@@ -135,10 +135,10 @@ function TrainTimeTable() {
     });
   }
 
-  const findLineKindNameByCode = (code: number) => {
+  const findLineKindMarkByCode = (code: number) => {
     const lineKind: LineKind | undefined = lineKinds.find(lineKind => lineKind.code === code);
 
-    return lineKind ? lineKind.name.slice(0, 1) : null;
+    return lineKind ? lineKind.mark : null;
   }
 
   const findLineDestinationNameByCode = (code: number) => {
@@ -147,21 +147,51 @@ function TrainTimeTable() {
     return lineDestination ? lineDestination.name : null;
   }
 
-  const recentTimeTable = timeTables.filter(timeTable => {
-    // NOTE: ミリ秒単位の比較ではなく、分単位で比較する
-    return timeTable.time.isSameOrAfter(now, "minute");
-  });
+  const toggleLineKindDisplay = (code: number) => {
+    const toggledLineKinds: LineKind[] = lineKinds.map(lineKind => {
+      if (lineKind.code === code) {
+        lineKind.display = !lineKind.display
+      }
+      return lineKind
+    })
+    setLineKind(toggledLineKinds);
+    resetFilteredRecentTimeTable();
+  }
 
-  recentTimeTables = recentTimeTable.slice(0, 5)
+  const resetFilteredRecentTimeTable = () => {
+    const displayLineKindsCode = lineKinds.map(lineKind => {
+      if (lineKind.display) { return lineKind.code }
+    });
+    const recentFilteredTimeTable = timeTables.filter(timeTable => {
+      // NOTE: ミリ秒単位の比較ではなく、分単位で比較する
+      return timeTable.time.isSameOrAfter(now, "minute") && displayLineKindsCode.includes(timeTable.kindCode);
+    });
+    console.log("filteredRecentTimeTable");
+    setFilteredTimeTables(recentFilteredTimeTable.slice(0, 5));
+  };
 
   return (
     <div className="font-light font-robot max-w-sm mt-11">
       <h1 className="text-xl">{line && line.name} {stationName}駅の運行情報</h1>
+      <div className="flex mt-6 text-sm space-x-3">
+        {lineKinds.map(lineKind =>
+          <div
+            key={`lineKind-${lineKind.code}`}
+          >
+            <span
+              className={`rounded-full border p-2 ${lineKind.display ? "border-white" : "border-thinGray"}`}
+              onClick={() => toggleLineKindDisplay(lineKind.code)}
+            >
+              {lineKind.mark}
+            </span>
+          </div>
+        )}
+      </div>
       <div className="mt-6 text-2xl space-y-3">
-        {recentTimeTables.length > 0 && recentTimeTables.map(timeTable => (
+        {filteredTimeTables.length > 0 && filteredTimeTables.map(timeTable => (
           <div key={timeTable.time} className="border-b-2 border-thinGray flex items-center space-x-4 pb-2">
             <div><time>{timeTable.time.format("HH:mm")}</time></div>
-            <div><span className="rounded-full border border-thinGray p-2 text-lg">{findLineKindNameByCode(timeTable.kindCode)}</span></div>
+            <div><span className="rounded-full border border-thinGray p-2 text-lg">{findLineKindMarkByCode(timeTable.kindCode)}</span></div>
             <div><span>{findLineDestinationNameByCode(timeTable.destinationCode)}行</span></div>
           </div>
         ))}
