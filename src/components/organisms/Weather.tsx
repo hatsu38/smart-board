@@ -1,5 +1,5 @@
-import React from "react";
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
+import { useSelector } from 'react-redux'
 import axios from 'axios';
 import DayJs from "../../libs/dayjs-ja";
 
@@ -32,14 +32,20 @@ function Weather() {
   const [currentWeather, setCurrentWeather] = useState<currentWeather>();
   const [dailyWeather, setDailyWeather] = useState<dailyWeather[]>([]);
   const [hourlyWeather, setHourlyWeather] = useState<hourlyWeather[]>([]);
-  const today = DayJs();
+  const { time } = useSelector((state: any) => state.timer);
+  const now = DayJs(time);
   const WEATHER_API_BASE_URL = "https://api.openweathermap.org/data/2.5/onecall"
 
   useEffect(() => {
-    apiCall();
-  }, []);
+    if (shouldRefetch()) { apiCall(); }
+  }, [now]);
+
+  const shouldRefetch = () => {
+    return !currentWeather || now.format("mm:ss") === "00:00"
+  }
 
   const apiCall = async () => {
+    console.log("FETCH Weather Time", now);
     const response: any = await axios.get(WEATHER_API_BASE_URL,
       {
         params: {
@@ -51,21 +57,31 @@ function Weather() {
         }
       })
     const data = response.data;
+    responseToFormatData(data);
+  }
+
+  const responseToFormatData = (data: any) => {
     setCurrentWeather({
       temperature: Math.round(data.current.temp),
       description: data.current.weather[0].description,
       icon: data.current.weather[0].icon,
     });
+    setDailyWeatherFromResponse(data.daily);
+    setHourlyWeatherFromResponse(data.hourly);
+  }
 
-    const formattedDailyWeather = data.daily.map((weather: any) => (
+  const setDailyWeatherFromResponse = (dailyData: any) => {
+    const formattedDailyWeather = dailyData.map((weather: any) => (
       formatDailyWeather(weather)
     ))
     const filteredDailyWeathers = formattedDailyWeather.filter((dailyWeather: dailyWeather ) => {
-      return dailyWeather.date.isSameOrAfter(today);
+      return dailyWeather.date.isSameOrAfter(now, "hour");
     });
     setDailyWeather(filteredDailyWeathers);
+  }
 
-    const formattedHourlyWeather = data.hourly.map((weather: any) => (
+  const setHourlyWeatherFromResponse = (hourlyData: any) => {
+    const formattedHourlyWeather = hourlyData.map((weather: any) => (
       formatHourlyWeather(weather)
     ))
     setHourlyWeather(formattedHourlyWeather);

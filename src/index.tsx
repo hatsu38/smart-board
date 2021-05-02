@@ -1,20 +1,23 @@
 import React, { VFC } from "react";
 import ReactDOM from "react-dom";
+import store from './store'
+import { Provider } from 'react-redux'
 import './styles/index.scss';
+
 import Clock from "src/components/organisms/Clock";
 import Weather from "src/components/organisms/Weather";
-import TrainTimeTable from "./components/organisms/TraionTimeTable";
+import TrainTimeTable from "./components/organisms/TrainTimeTable";
 
 const Index: VFC = () => (
-  <div className="text-white">
-    <div className="flex items-top justify-between">
+  <Provider store={store}>
+    <div className="text-white flex items-top justify-between">
       <div>
         <Clock />
         <TrainTimeTable />
       </div>
       <Weather />
     </div>
-  </div>
+  </Provider>
 );
 
 ReactDOM.render(<Index />, document.getElementById("index"));
