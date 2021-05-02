@@ -152,13 +152,11 @@ function TrainTimeTable() {
     return timeTable.time.isSameOrAfter(now, "minute");
   });
 
-  recentTimeTables = recentTimeTable.slice(0, 5)
-
   return (
     <div className="font-light font-robot max-w-sm mt-11">
       <h1 className="text-xl">{line && line.name} {stationName}駅の運行情報</h1>
-      <div className="mt-6 text-2xl space-y-3">
-        {recentTimeTables.length > 0 && recentTimeTables.map(timeTable => (
+      <div className="mt-6 pt-1 text-2xl space-y-3 h-64 overflow-y-auto">
+        {recentTimeTable.length > 0 && recentTimeTable.map(timeTable => (
           <div key={timeTable.time} className="border-b-2 border-thinGray flex items-center space-x-4 pb-2">
             <div><time>{timeTable.time.format("HH:mm")}</time></div>
             <div><span className="rounded-full border border-thinGray p-2 text-lg">{findLineKindNameByCode(timeTable.kindCode)}</span></div>
