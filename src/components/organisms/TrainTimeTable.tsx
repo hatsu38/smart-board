@@ -187,7 +187,7 @@ function TrainTimeTable() {
           </div>
         )}
       </div>
-      <div className="mt-6 text-2xl space-y-3">
+      <div className="mt-6 pt-1 text-2xl space-y-3 h-64 overflow-y-auto">
         {filteredTimeTables.length > 0 && filteredTimeTables.map(timeTable => (
           <div key={timeTable.time} className="border-b-2 border-thinGray flex items-center space-x-4 pb-2">
             <div><time>{timeTable.time.format("HH:mm")}</time></div>
