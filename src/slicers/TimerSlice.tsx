@@ -4,11 +4,11 @@ import DayJs from "../libs/dayjs-ja";
 export const TimerSlice = createSlice({
   name: 'timer',
   initialState: {
-    time: DayJs()
+    now: DayJs()
   },
   reducers: {
     tick: (state, action) => {
-      state.time = action.payload;
+      state.now = action.payload;
     },
   },
 })

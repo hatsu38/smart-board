@@ -35,15 +35,27 @@ function TrainTimeTable() {
   const [lineKinds, setLineKind] = useState<LineKind[]>([]);
   const [timeTables, setTimeTable] = useState<TimeTable[]>([]);
   const EKISPART_API_BASE_URL = "https://api.ekispert.jp/v1/json/operationLine/timetable"
-  const { time } = useSelector((state: any) =>state.timer);
+  const { time } = useSelector((state: any) => state.timer);
   const now = DayJs(time);
+  let recentTimeTables = [];
 
+  useEffect(() => { apiCall() }, []);
   useEffect(() => {
-    apiCall();
-  }, []);
+    if (shouldRefetch()) {
+      const recentTimeTable = timeTables.filter(timeTable => {
+        return timeTable.time.isSameOrAfter(now);
+      });
+      console.log("recentTimeTable", recentTimeTable);
+      recentTimeTables = recentTimeTable.slice(0, 5);
+    }
+  }, [now]);
 
+  const shouldRefetch = () => {
+    return !stationName || now.format("ss") === "00"
+  }
 
   const apiCall = async () => {
+    console.log("FETCH Train Time", now);
     const response: any = await axios.get(EKISPART_API_BASE_URL,
       {
         params: {
@@ -54,24 +66,36 @@ function TrainTimeTable() {
         }
       })
     const data = response.data.ResultSet.TimeTable;
+    responseToFormatData(data);
+  }
 
+  const responseToFormatData = (data: any) => {
     setStationName(data.Station.Name);
 
     const formattedLine = formatLine(data.Line);
     setLine(formattedLine);
 
-    const formattedLineDestinations = data.LineDestination.map((LineDestination: any) => (
+    setLineDestinationFromData(data.LineDestination);
+    setLineKindFromData(data.LineKind);
+    setTimeTableFromData(data.HourTable);
+  }
+
+  const setLineDestinationFromData = (LineDestinations: any) => {
+    const formattedLineDestinations = LineDestinations.map((LineDestination: any) => (
       formatLineDestination(LineDestination)
     ))
     setLineDestination(formattedLineDestinations);
+  }
 
-
-    const formattedLineKinds = data.LineKind.map((LineKind: any) => (
+  const setLineKindFromData = (LineKinds: any) => {
+    const formattedLineKinds = LineKinds.map((LineKind: any) => (
       formatLineKind(LineKind)
     ))
     setLineKind(formattedLineKinds);
+  }
 
-    const formattedTimeTables = data.HourTable.flatMap((HourTable: any) => (
+  const setTimeTableFromData = (HourTables: any) => {
+    const formattedTimeTables = HourTables.flatMap((HourTable: any) => (
       HourTable.MinuteTable.flatMap((MinuteTable: any) => (
         formatTimeTable(HourTable.Hour, MinuteTable)
       ))
@@ -111,11 +135,6 @@ function TrainTimeTable() {
     });
   }
 
-  const recentTimeTable = timeTables.filter(timeTable => {
-    return timeTable.time.isSameOrAfter(now);
-  });
-  const filteredRecentTimeTable = recentTimeTable.slice(0, 5);
-
   const findLineKindNameByCode = (code: number) => {
     const lineKind: LineKind | undefined = lineKinds.find(lineKind => lineKind.code === code);
 
@@ -124,23 +143,21 @@ function TrainTimeTable() {
 
   const findLineDestinationNameByCode = (code: number) => {
     const lineDestination: LineDestination | undefined = lineDestinations.find(lineDestination => lineDestination.code === code);
-    // console.log("lineDestination", lineDestination);
+
     return lineDestination ? lineDestination.name : null;
   }
 
-  // console.log("now.format(YYYYMMDD)", now.format("YYYYMMDD"));
-  // console.log("stationName", stationName);
-  // console.log("line", line);
-  // console.log("lineDestination", lineDestinations);
-  // console.log("lineKind", lineKinds);
-  // console.log("timeTable", timeTables);
-  // console.log("filteredRecentTimeTable", filteredRecentTimeTable);
+  const recentTimeTable = timeTables.filter(timeTable => {
+    return timeTable.time.isSameOrAfter(now);
+  });
+
+  recentTimeTables = recentTimeTable.slice(0, 5)
 
   return (
     <div className="font-light font-robot max-w-sm mt-11">
       <h1 className="text-xl"><span className="text-xl">{line && line.name} {stationName}</span>駅の運行情報</h1>
       <div className="mt-6 text-2xl space-y-3">
-        {filteredRecentTimeTable.length > 0 && filteredRecentTimeTable.map(timeTable => (
+        {recentTimeTables.length > 0 && recentTimeTables.map(timeTable => (
           <div key={timeTable.time} className="border-b-2 border-thinGray flex items-center space-x-4 pb-2">
             <div><time>{timeTable.time.format("HH:mm")}</time></div>
             <div><span className="rounded-full border border-thinGray p-2 text-lg">{findLineKindNameByCode(timeTable.kindCode)}</span></div>
