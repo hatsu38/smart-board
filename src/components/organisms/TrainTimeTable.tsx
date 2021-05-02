@@ -148,7 +148,8 @@ function TrainTimeTable() {
   }
 
   const recentTimeTable = timeTables.filter(timeTable => {
-    return timeTable.time.isSameOrAfter(now);
+    // NOTE: ミリ秒単位の比較ではなく、分単位で比較する
+    return timeTable.time.isSameOrAfter(now, "minute");
   });
 
   recentTimeTables = recentTimeTable.slice(0, 5)

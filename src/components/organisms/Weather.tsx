@@ -75,7 +75,7 @@ function Weather() {
       formatDailyWeather(weather)
     ))
     const filteredDailyWeathers = formattedDailyWeather.filter((dailyWeather: dailyWeather ) => {
-      return dailyWeather.date.isSameOrAfter(now);
+      return dailyWeather.date.isSameOrAfter(now, "hour");
     });
     setDailyWeather(filteredDailyWeathers);
   }
