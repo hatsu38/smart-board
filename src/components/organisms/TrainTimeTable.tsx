@@ -49,7 +49,7 @@ function TrainTimeTable() {
   }, [now]);
 
   const shouldRefetch = () => {
-    return !stationName || now.format("ss") === "00"
+    return filteredTimeTables.length < 1 || now.format("ss") === "00"
   }
 
   const apiCall = async () => {
@@ -166,8 +166,8 @@ function TrainTimeTable() {
       // NOTE: ミリ秒単位の比較ではなく、分単位で比較する
       return timeTable.time.isSameOrAfter(now, "minute") && displayLineKindsCode.includes(timeTable.kindCode);
     });
-    console.log("filteredRecentTimeTable");
-    setFilteredTimeTables(recentFilteredTimeTable.slice(0, 5));
+    console.log("filteredRecentTimeTable", recentFilteredTimeTable);
+    setFilteredTimeTables(recentFilteredTimeTable);
   };
 
   return (
