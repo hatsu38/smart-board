@@ -171,11 +171,12 @@ function TrainTimeTable() {
 
   return (
     <div className="font-light font-robot max-w-sm mt-11">
-      <h1 className="text-xl">{line && line.name} {stationName}駅の運行情報</h1>
-      <div className="flex mt-6 text-sm space-x-3">
+      <h1 className="text-xl sm:text-left">{line && line.name} {stationName}駅の運行情報</h1>
+      <div className="sm:flex mt-6 text-sm space-x-3">
         {lineKinds.map(lineKind =>
           <div
             key={`lineKind-${lineKind.code}`}
+            className="inline sm:block"
           >
             <span
               className={`rounded-full border p-2 ${lineKind.display ? "border-white" : "border-thinGray"}`}
