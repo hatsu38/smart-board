@@ -46,7 +46,7 @@ function TrainTimeTable() {
     if (shouldRefetch()) {
       resetFilteredRecentTimeTable();
     }
-  }, [now]);
+  }, [time]);
 
   const shouldRefetch = () => {
     return filteredTimeTables.length < 1 || now.format("ss") === "00"
@@ -166,7 +166,7 @@ function TrainTimeTable() {
       // NOTE: ミリ秒単位の比較ではなく、分単位で比較する
       return timeTable.time.isSameOrAfter(now, "minute") && displayLineKindsCode.includes(timeTable.kindCode);
     });
-    console.log("filteredRecentTimeTable", recentFilteredTimeTable);
+    console.log("filteredRecentTimeTable");
     setFilteredTimeTables(recentFilteredTimeTable);
   };
 

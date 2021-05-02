@@ -38,7 +38,7 @@ function Weather() {
 
   useEffect(() => {
     if (shouldRefetch()) { apiCall(); }
-  }, [now]);
+  }, [time]);
 
   const shouldRefetch = () => {
     return !currentWeather || now.format("mm:ss") === "00:00"
