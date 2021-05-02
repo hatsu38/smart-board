@@ -11,7 +11,7 @@ function Clock() {
     const timerId = setInterval(() => dispatch(tick(DayJs().format('YYYY/MM/DD HH:mm:ss'))), 1000);
 
     return () => clearInterval(timerId);
-  });
+  }, []);
   const now = DayJs(time);
 
   return (
