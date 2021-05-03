@@ -170,7 +170,7 @@ function TrainTimeTable() {
   };
 
   return (
-    <div className="font-light font-robot max-w-sm mt-11">
+    <div className="font-light font-robot max-w-sm mt-44">
       <h1 className="text-xl sm:text-left">{line && line.name} {stationName}駅の運行情報</h1>
       <div className="sm:flex mt-6 text-sm space-x-3">
         {lineKinds.map(lineKind =>
@@ -187,7 +187,7 @@ function TrainTimeTable() {
           </div>
         )}
       </div>
-      <div className="mt-6 pt-1 text-2xl space-y-3 h-64 overflow-y-auto">
+      <div className="mt-6 pt-1 text-2xl space-y-3 h-96 overflow-y-auto">
         {filteredTimeTables.length > 0 && filteredTimeTables.map(timeTable => (
           <div key={timeTable.time} className="border-b-2 border-thinGray flex items-center space-x-4 pb-2">
             <div><time>{timeTable.time.format("HH:mm")}</time></div>

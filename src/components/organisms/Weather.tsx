@@ -146,7 +146,7 @@ function Weather() {
       }
 
       {dailyWeather.length > 0 &&
-        <div className="mt-4 space-y-2">
+        <div className="mt-4 space-y-2 h-96 overflow-y-auto">
         {dailyWeather.map((weather, index) => (
           <div className="text-2xl flex justify-between items-center space-x-2 border-b-2 border-thinGray" key={index}>
             <div>{weather.date.format("DD")}({weather.date.format("dd")})</div>
