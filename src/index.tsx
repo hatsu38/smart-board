@@ -10,13 +10,13 @@ import TrainTimeTable from "./components/organisms/TrainTimeTable";
 
 const Index: VFC = () => (
   <Provider store={store}>
-    <div className="text-white sm:flex items-top justify-between">
-      <div>
-        <Clock />
-        <TrainTimeTable />
+      <div className="text-center sm:flex items-top justify-between mx-2 sm:mt-10 sm:mx-12">
+        <div>
+          <Clock />
+          <TrainTimeTable />
+        </div>
+        <Weather />
       </div>
-      <Weather />
-    </div>
   </Provider>
 );
 
