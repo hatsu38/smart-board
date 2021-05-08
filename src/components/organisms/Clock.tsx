@@ -15,7 +15,7 @@ function Clock() {
   const now = DayJs(time);
 
   return (
-    <div className="font-light font-robot sm:text-left">
+    <div className="font-light font-robot">
       <p className="text-2xl text-thinGray">{now.format('YYYY/MM/DD')}({now.format('dd')})</p>
       <h2 className="text-8xl tracking-tight">
         {now.format('HH:mm')}<span className="text-4xl align-top text-thinGray">{now.format('ss')}</span>

@@ -171,12 +171,12 @@ function TrainTimeTable() {
 
   return (
     <div className="font-light font-robot max-w-sm mt-44">
-      <h1 className="text-xl sm:text-left">{line && line.name} {stationName}駅の運行情報</h1>
-      <div className="sm:flex mt-6 text-sm space-x-3">
+      <h1 className="text-xl">{line && line.name} {stationName}駅の運行情報</h1>
+      <div className="mt-6 text-sm space-x-3">
         {lineKinds.map(lineKind =>
           <div
             key={`lineKind-${lineKind.code}`}
-            className="inline sm:block"
+            className="inline"
           >
             <span
               className={`rounded-full border p-2 ${lineKind.display ? "border-white" : "border-thinGray"}`}
@@ -187,12 +187,14 @@ function TrainTimeTable() {
           </div>
         )}
       </div>
-      <div className="mt-6 pt-1 text-2xl space-y-3 h-96 overflow-y-auto">
+      <div className="mt-6 pt-1 text-xl space-y-3 h-96 overflow-y-auto">
         {filteredTimeTables.length > 0 && filteredTimeTables.map(timeTable => (
-          <div key={timeTable.time} className="border-b-2 border-thinGray flex items-center space-x-4 pb-2">
-            <div><time>{timeTable.time.format("HH:mm")}</time></div>
-            <div><span className="rounded-full border border-thinGray p-2 text-lg">{findLineKindMarkByCode(timeTable.kindCode)}</span></div>
-            <div><span>{findLineDestinationNameByCode(timeTable.destinationCode)}行</span></div>
+          <div key={timeTable.time} className="border-b-2 border-thinGray flex items-center pb-2 justify-between">
+            <div className="flex items-center">
+              <div>{findLineKindMarkByCode(timeTable.kindCode)}:</div>
+              <div className="ml-1 text-2xl"><time>{timeTable.time.format("HH:mm")}</time></div>
+            </div>
+            <div className="ml-16">{findLineDestinationNameByCode(timeTable.destinationCode)}<span className="text-base"> 行</span></div>
           </div>
         ))}
       </div>

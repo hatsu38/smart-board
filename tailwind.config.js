@@ -8,7 +8,7 @@ module.exports = {
         robot: ["Roboto Condensed"]
       },
       colors: {
-        thinGray: '#444444',
+        thinGray: '#555555',
       }
     },
   },
