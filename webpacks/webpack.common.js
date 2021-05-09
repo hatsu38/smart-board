@@ -1,5 +1,5 @@
 const path = require("path");
-const HtmlWebpackPlugin = require('html-webpack-plugin');
+const HtmlWebpackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const tailwindcss = require("tailwindcss");
 const autoprefixer = require("autoprefixer");
@@ -13,7 +13,7 @@ module.exports = {
   resolve: {
     extensions: [".js", ".ts", ".tsx", ".jsx"],
     alias: {
-      'src': path.resolve(__dirname, '../src'),
+      "src": path.resolve(__dirname, "../src"),
     },
   },
   watchOptions: {
@@ -22,7 +22,7 @@ module.exports = {
   },
   plugins: [
     new HtmlWebpackPlugin({
-      template: 'public/index.html'
+      template: "public/index.html"
     }),
     new MiniCssExtractPlugin({
       filename: "styles/[name].[contenthash].css",
@@ -36,7 +36,7 @@ module.exports = {
         exclude: /node_modules/,
         use: [
           {
-            loader: 'ts-loader'
+            loader: "ts-loader"
           }
         ],
       },
