@@ -1,0 +1,29 @@
+name: CI/CD
+
+on:
+  pull_request:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-18.04
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js 14.16.1
+        uses: actions/setup-node@v1
+        with:
+          node-version: 14.16.1
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run the tests
+        run: npm run lint
+
+      - name: Build Production
+        run: npm run build:production
