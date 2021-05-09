@@ -21,7 +21,8 @@
     "semi": ["error", "always"], // セミコロンを必須にする
     "no-var": "error", // var禁止
     "no-unused-vars": "error", // 使用していない変数を削除
-    "no-debugger": "error" // デバッガーは残さない
+    "no-debugger": "error", // デバッガーは残さない
+    "@typescript-eslint/no-explicit-any": "off"
   },
   "settings": {
     "react": {
