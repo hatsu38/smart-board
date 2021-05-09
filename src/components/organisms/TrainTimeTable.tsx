@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { useSelector } from 'react-redux'
-import axios from 'axios';
+import { useSelector } from "react-redux";
+import axios from "axios";
 import DayJs from "../../libs/dayjs-ja";
 
 interface TimeTable {
@@ -29,19 +29,18 @@ interface LineKind {
   display: boolean,
 }
 
-
-function TrainTimeTable() {
+const TrainTimeTable: React.FC = () => {
   const [stationName, setStationName] = useState<string>();
   const [line, setLine] = useState<Line>();
   const [lineDestinations, setLineDestination] = useState<LineDestination[]>([]);
   const [lineKinds, setLineKind] = useState<LineKind[]>([]);
   const [timeTables, setTimeTable] = useState<TimeTable[]>([]);
   const [filteredTimeTables, setFilteredTimeTables] = useState<TimeTable[]>([]);
-  const EKISPART_API_BASE_URL = "https://api.ekispert.jp/v1/json/operationLine/timetable"
+  const EKISPART_API_BASE_URL = "https://api.ekispert.jp/v1/json/operationLine/timetable";
   const { time } = useSelector((state: any) => state.timer);
   const now = DayJs(time);
 
-  useEffect(() => { apiCall() }, []);
+  useEffect(() => { apiCall(); }, []);
   useEffect(() => {
     if (shouldRefetch()) {
       resetFilteredRecentTimeTable();
@@ -49,8 +48,8 @@ function TrainTimeTable() {
   }, [time]);
 
   const shouldRefetch = () => {
-    return filteredTimeTables.length < 1 || now.format("ss") === "00"
-  }
+    return filteredTimeTables.length < 1 || now.format("ss") === "00";
+  };
 
   const apiCall = async () => {
     console.log("FETCH Train Time", now);
@@ -62,10 +61,10 @@ function TrainTimeTable() {
           code: 3020,
           date: now.format("YYYYMMDD"),
         }
-      })
+      });
     const data = response.data.ResultSet.TimeTable;
     responseToFormatData(data);
-  }
+  };
 
   const responseToFormatData = (data: any) => {
     setStationName(data.Station.Name);
@@ -76,21 +75,21 @@ function TrainTimeTable() {
     setLineDestinationFromData(data.LineDestination);
     setLineKindFromData(data.LineKind);
     setTimeTableFromData(data.HourTable);
-  }
+  };
 
   const setLineDestinationFromData = (LineDestinations: any) => {
     const formattedLineDestinations = LineDestinations.map((LineDestination: any) => (
       formatLineDestination(LineDestination)
-    ))
+    ));
     setLineDestination(formattedLineDestinations);
-  }
+  };
 
   const setLineKindFromData = (LineKinds: any) => {
     const formattedLineKinds = LineKinds.map((LineKind: any) => (
       formatLineKind(LineKind)
-    ))
+    ));
     setLineKind(formattedLineKinds);
-  }
+  };
 
   const setTimeTableFromData = (HourTables: any) => {
     const formattedTimeTables = HourTables.flatMap((HourTable: any) => (
@@ -99,7 +98,7 @@ function TrainTimeTable() {
       ))
     ));
     setTimeTable(formattedTimeTables);
-  }
+  };
 
   const formatLine = (line: any) => {
     return ({
@@ -107,14 +106,14 @@ function TrainTimeTable() {
       toName: line.Direction,
       fromName: line.Source,
     });
-  }
+  };
 
   const formatLineDestination = (LineDestination: any) => {
     return ({
       name: LineDestination.text,
       code: Number(LineDestination.code),
     });
-  }
+  };
 
   const formatLineKind = (LineKind: any) => {
     return ({
@@ -123,7 +122,7 @@ function TrainTimeTable() {
       mark: LineKind.text.slice(0, 1),
       display: true,
     });
-  }
+  };
 
   const formatTimeTable = (hour: number, minute: any) => {
     return ({
@@ -133,34 +132,34 @@ function TrainTimeTable() {
       lineCode: Number(minute.Stop.lineCode),
       destinationCode: Number(minute.Stop.destinationCode),
     });
-  }
+  };
 
   const findLineKindMarkByCode = (code: number) => {
     const lineKind: LineKind | undefined = lineKinds.find(lineKind => lineKind.code === code);
 
     return lineKind ? lineKind.mark : null;
-  }
+  };
 
   const findLineDestinationNameByCode = (code: number) => {
     const lineDestination: LineDestination | undefined = lineDestinations.find(lineDestination => lineDestination.code === code);
 
     return lineDestination ? lineDestination.name : null;
-  }
+  };
 
   const toggleLineKindDisplay = (code: number) => {
     const toggledLineKinds: LineKind[] = lineKinds.map(lineKind => {
       if (lineKind.code === code) {
-        lineKind.display = !lineKind.display
+        lineKind.display = !lineKind.display;
       }
-      return lineKind
-    })
+      return lineKind;
+    });
     setLineKind(toggledLineKinds);
     resetFilteredRecentTimeTable();
-  }
+  };
 
   const resetFilteredRecentTimeTable = () => {
     const displayLineKindsCode = lineKinds.map(lineKind => {
-      if (lineKind.display) { return lineKind.code }
+      if (lineKind.display) { return lineKind.code; }
     });
     const recentFilteredTimeTable = timeTables.filter(timeTable => {
       // NOTE: ミリ秒単位の比較ではなく、分単位で比較する
