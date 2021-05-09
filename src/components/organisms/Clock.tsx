@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import DayJs from "../../libs/dayjs-ja";
 import { tick } from "../../slicers/TimerSlice";
 
-function Clock() {
+const Clock: React.FC = () => {
   const { time } = useSelector((state: any) => state.timer);
   const dispatch = useDispatch();
 

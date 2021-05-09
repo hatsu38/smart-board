@@ -28,7 +28,7 @@ interface hourlyWeather {
   temperature: number,
 }
 
-function Weather() {
+const Weather: React.FC = () => {
   const [currentWeather, setCurrentWeather] = useState<currentWeather>();
   const [dailyWeather, setDailyWeather] = useState<dailyWeather[]>([]);
   const [hourlyWeather, setHourlyWeather] = useState<hourlyWeather[]>([]);

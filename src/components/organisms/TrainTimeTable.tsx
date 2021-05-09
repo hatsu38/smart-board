@@ -29,8 +29,7 @@ interface LineKind {
   display: boolean,
 }
 
-
-function TrainTimeTable() {
+const TrainTimeTable: React.FC = () => {
   const [stationName, setStationName] = useState<string>();
   const [line, setLine] = useState<Line>();
   const [lineDestinations, setLineDestination] = useState<LineDestination[]>([]);
