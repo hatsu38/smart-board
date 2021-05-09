@@ -11,5 +11,18 @@
     "plugin:@typescript-eslint/recommended",
     "plugin:react/recommended",
     "prettier"
-  ]
+  ],
+  {
+    "rules": {
+      // 0は無効、1は警告、2はエラー
+      "indent": ["error", 2,
+        { "SwitchCase": 1 }
+      ],
+      "quotes": ["error", "double"],
+      "semi": ["error", "always"],
+      "no-var": "error",
+      "no-unused-vars": "error",
+      "no-debugger": "error"
+    }
+  }
 }
