@@ -1,8 +1,8 @@
-import { createSlice } from '@reduxjs/toolkit'
+import { createSlice } from "@reduxjs/toolkit";
 import DayJs from "../libs/dayjs-ja";
 
 export const TimerSlice = createSlice({
-  name: 'timer',
+  name: "timer",
   initialState: {
     time: DayJs()
   },
@@ -11,7 +11,7 @@ export const TimerSlice = createSlice({
       state.time = action.payload;
     },
   },
-})
+});
 
-export const { tick } = TimerSlice.actions
-export default TimerSlice
+export const { tick } = TimerSlice.actions;
+export default TimerSlice;
