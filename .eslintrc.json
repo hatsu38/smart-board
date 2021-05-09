@@ -1,10 +1,4 @@
 {
-  "env": {
-    "es6": true,
-    "node": true,
-    "browser": true,
-    "commonjs": true
-  },
   "extends": [
     "eslint:recommended",
     "plugin:@typescript-eslint/eslint-recommended",
@@ -12,17 +6,28 @@
     "plugin:react/recommended",
     "prettier"
   ],
-  {
-    "rules": {
-      // 0は無効、1は警告、2はエラー
-      "indent": ["error", 2,
-        { "SwitchCase": 1 }
-      ],
-      "quotes": ["error", "double"],
-      "semi": ["error", "always"],
-      "no-var": "error",
-      "no-unused-vars": "error",
-      "no-debugger": "error"
+  "rules": {
+    // 0は無効、1は警告、2はエラー
+    "indent": ["error", 2,
+      {"SwitchCase": 1}
+    ], // インデントはSpaceを2個
+    "prefer-const": "error", // 再代入を行わない変数はconstを利用
+    "quotes": ["error", "double"], // ダブルクオーテーションで文字列を囲う
+    "semi": ["error", "always"], // セミコロンを必須にする
+    "no-var": "error", // var禁止
+    "no-unused-vars": "error", // 使用していない変数を削除
+    "no-debugger": "error" // デバッガーは残さない
+  },
+  "settings": {
+    "react": {
+      "version": "detect",
+      "import/resolver": {
+        "node": {
+          "paths": ["src"],
+          "extensions": [".js", ".jsx", ".ts", ".tsx"],
+          "moduleDirectory": ["node_modules", "/"]
+        }
+      }
     }
   }
 }
