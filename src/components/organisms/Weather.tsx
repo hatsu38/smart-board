@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { useSelector } from 'react-redux'
-import axios from 'axios';
+import { useSelector } from "react-redux";
+import axios from "axios";
 import DayJs from "../../libs/dayjs-ja";
 
 interface currentWeather {
@@ -34,15 +34,15 @@ function Weather() {
   const [hourlyWeather, setHourlyWeather] = useState<hourlyWeather[]>([]);
   const { time } = useSelector((state: any) => state.timer);
   const now = DayJs(time);
-  const WEATHER_API_BASE_URL = "https://api.openweathermap.org/data/2.5/onecall"
+  const WEATHER_API_BASE_URL = "https://api.openweathermap.org/data/2.5/onecall";
 
   useEffect(() => {
     if (shouldRefetch()) { apiCall(); }
   }, [time]);
 
   const shouldRefetch = () => {
-    return !currentWeather || now.format("mm:ss") === "00:00"
-  }
+    return !currentWeather || now.format("mm:ss") === "00:00";
+  };
 
   const apiCall = async () => {
     console.log("FETCH Weather Time", now);
@@ -55,10 +55,10 @@ function Weather() {
           units: "metric",
           appid: process.env.OPEN_WEATHER_API_KEY,
         }
-      })
+      });
     const data = response.data;
     responseToFormatData(data);
-  }
+  };
 
   const responseToFormatData = (data: any) => {
     setCurrentWeather({
@@ -68,24 +68,24 @@ function Weather() {
     });
     setDailyWeatherFromResponse(data.daily);
     setHourlyWeatherFromResponse(data.hourly);
-  }
+  };
 
   const setDailyWeatherFromResponse = (dailyData: any) => {
     const formattedDailyWeather = dailyData.map((weather: any) => (
       formatDailyWeather(weather)
-    ))
+    ));
     const filteredDailyWeathers = formattedDailyWeather.filter((dailyWeather: dailyWeather ) => {
       return dailyWeather.date.isSameOrAfter(now, "hour");
     });
     setDailyWeather(filteredDailyWeathers);
-  }
+  };
 
   const setHourlyWeatherFromResponse = (hourlyData: any) => {
     const formattedHourlyWeather = hourlyData.map((weather: any) => (
       formatHourlyWeather(weather)
-    ))
+    ));
     setHourlyWeather(formattedHourlyWeather);
-  }
+  };
 
   const formatDailyWeather = (weather: any) => {
     const date = DayJs.unix(weather.dt);
@@ -99,7 +99,7 @@ function Weather() {
         min: Math.round(weather.temp.min),
       },
     });
-  }
+  };
 
   const formatHourlyWeather = (weather: any) => {
     const date = DayJs.unix(weather.dt);
@@ -110,11 +110,11 @@ function Weather() {
       icon: weather.weather[0].icon,
       temperature: Math.round(weather.temp),
     });
-  }
+  };
 
   const weatherIconUrl = (icon: string) => {
-    return `https://openweathermap.org/img/wn/${icon}.png`
-  }
+    return `https://openweathermap.org/img/wn/${icon}.png`;
+  };
 
   return (
     <div className="font-light font-robot text-center max-w-sm">
@@ -147,15 +147,15 @@ function Weather() {
 
       {dailyWeather.length > 0 &&
         <div className="mt-4 space-y-2 h-96 overflow-y-auto">
-        {dailyWeather.map((weather, index) => (
-          <div className="text-2xl flex justify-between items-center space-x-2 border-b-2 border-thinGray" key={index}>
-            <div>{weather.date.format("DD")}({weather.date.format("dd")})</div>
-            <img src={weatherIconUrl(weather.icon)} className="mx-auto" />
-            <div>{weather.temperature.max}<span className="text-sm text-thinGray">℃</span></div>
-            <div>{weather.temperature.min}<span className="text-sm text-thinGray">℃</span></div>
-            <div>{weather.probabilityOfPrecipitation}<span className="text-sm text-thinGray">%</span></div>
-          </div>
-        ))}
+          {dailyWeather.map((weather, index) => (
+            <div className="text-2xl flex justify-between items-center space-x-2 border-b-2 border-thinGray" key={index}>
+              <div>{weather.date.format("DD")}({weather.date.format("dd")})</div>
+              <img src={weatherIconUrl(weather.icon)} className="mx-auto" />
+              <div>{weather.temperature.max}<span className="text-sm text-thinGray">℃</span></div>
+              <div>{weather.temperature.min}<span className="text-sm text-thinGray">℃</span></div>
+              <div>{weather.probabilityOfPrecipitation}<span className="text-sm text-thinGray">%</span></div>
+            </div>
+          ))}
         </div>
       }
     </div>
