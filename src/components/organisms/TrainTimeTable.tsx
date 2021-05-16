@@ -93,9 +93,13 @@ const TrainTimeTable: React.FC = () => {
 
   const setTimeTableFromData = (HourTables: any) => {
     const formattedTimeTables = HourTables.flatMap((HourTable: any) => (
-      HourTable.MinuteTable.flatMap((MinuteTable: any) => (
-        formatTimeTable(HourTable.Hour, MinuteTable)
-      ))
+      HourTable.MinuteTable.length > 0 ? (
+        HourTable.MinuteTable.flatMap((MinuteTable: any) => (
+          formatTimeTable(HourTable.Hour, MinuteTable)
+        ))
+      ) : (
+        formatTimeTable(HourTable.Hour, HourTable.MinuteTable)
+      )
     ));
     setTimeTable(formattedTimeTables);
   };
