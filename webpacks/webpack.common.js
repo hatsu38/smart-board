@@ -11,7 +11,7 @@ module.exports = {
   resolve: {
     extensions: [".js", ".ts", ".tsx", ".jsx"],
     alias: {
-      "src": path.resolve(__dirname, "../src"),
+      "~": path.resolve("./src"),
     },
   },
   watchOptions: {

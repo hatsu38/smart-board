@@ -11,7 +11,10 @@
     "module": "es2020",
     "jsx": "react",
     "strict": true,
-    "typeRoots": ["node_modules/@types", "./src/types"]
+    "typeRoots": ["node_modules/@types", "./src/types"],
+    "paths": {
+      "~/*": ["src/*"]
+    },
   },
   "exclude": ["node_modules", "tmp"]
 }
