@@ -1,5 +1,5 @@
 import { configureStore } from "@reduxjs/toolkit";
-import TimerSlice from "./slicers/TimerSlice";
+import TimerSlice from "~/slicers/TimerSlice";
 
 export default configureStore({
   reducer: {

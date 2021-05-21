@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import DayJs from "../libs/dayjs-ja";
+import DayJs from "~/libs/dayjs-ja";
 
 export const TimerSlice = createSlice({
   name: "timer",
