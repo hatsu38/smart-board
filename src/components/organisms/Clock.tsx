@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import DayJs from "../../libs/dayjs-ja";
-import { tick } from "../../slicers/TimerSlice";
+import DayJs from "~/libs/dayjs-ja";
+import { tick } from "~/slicers/TimerSlice";
 
 const Clock: React.FC = () => {
   const { time } = useSelector((state: any) => state.timer);
