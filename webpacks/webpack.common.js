@@ -1,8 +1,6 @@
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const tailwindcss = require("tailwindcss");
-const autoprefixer = require("autoprefixer");
 
 module.exports = {
   entry: ["./src/index.tsx"],
@@ -51,7 +49,10 @@ module.exports = {
             options: {
               postcssOptions: {
                 ident: "postcss",
-                plugins: [tailwindcss, autoprefixer],
+                plugins: [
+                  require("tailwindcss"),
+                  require("autoprefixer")
+                ],
               },
             },
           },
